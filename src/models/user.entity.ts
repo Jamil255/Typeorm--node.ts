@@ -1,4 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm'
+import { Profile } from './profile.entity.js'
 
 @Entity('users')
 export class User {
@@ -10,4 +17,8 @@ export class User {
   password: string
   @Column({ type: 'boolean', default: true })
   isActive: boolean
+
+  @OneToOne(() => Profile)
+  @JoinColumn()
+  profile: Profile
 }

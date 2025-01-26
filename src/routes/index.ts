@@ -3,7 +3,7 @@ import {
   getAllRecordsController,
   loginController,
   signUpController,
-} from '../controllers/index.js'
+} from '../controllers/auth.controller.js'
 const app: Router = express.Router()
 
 app.get('/users', getAllRecordsController)

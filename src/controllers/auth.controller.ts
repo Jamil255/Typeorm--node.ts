@@ -2,6 +2,8 @@ import { Request, Response } from 'express'
 import appDataSource from '../constants/index.js'
 import { User } from '../models/user.entity.js'
 import bcrypt, { hash, compare } from 'bcrypt'
+import jwt from 'jsonwebtoken'
+import { cookieOptions } from '../constants/cookie.js'
 const userRepo = appDataSource.getRepository(User)
 
 const getAllRecordsController = async (
@@ -35,8 +37,17 @@ const loginController = async (
     const isMatch = await bcrypt.compare(password, user.password)
     if (!isMatch)
       return res.status(400).json({ message: 'Invalid credentials' })
-
-    return res.status(200).json({ message: 'Login successful', user })
+    if (!process.env.JWT_SECRET_KEY) {
+      return res.status(500).json({ message: 'JWT secret key is not defined' })
+    }
+    const token = jwt.sign(
+      { id: user.id, userName: user.userName },
+      process.env.JWT_SECRET_KEY
+    )
+    return res
+      .cookie('token', token, cookieOptions)
+      .status(200)
+      .json({ message: 'Login successful', user })
   } catch (error) {
     return res.status(500).json({ message: error })
   }
@@ -62,10 +73,22 @@ const signUpController = async (
     newUser.password = hashPass
     await userRepo.save(newUser)
 
-    return res.status(200).json({ message: 'signup successful', newUser })
+    if (!process.env.JWT_SECRET_KEY) {
+      return res.status(500).json({ message: 'JWT secret key is not defined' })
+    }
+    const token = jwt.sign(
+      { id: newUser.id, userName: newUser.userName },
+      process.env.JWT_SECRET_KEY
+    )
+
+    return res
+      .cookie('token', token, cookieOptions)
+      .status(200)
+      .json({ message: 'signup successful', newUser })
   } catch (error) {
     return res.status(500).json({ message: error })
   }
 }
+
 
 export { getAllRecordsController, signUpController, loginController }
