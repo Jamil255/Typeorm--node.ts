@@ -5,7 +5,8 @@
   "main": "app.js",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"npx tsc -w\"  \"nodemon dist/app.js\""
+    "dev": "concurrently \"npx tsc -w\"  \"nodemon dist/app.js\"",
+    "build:prod": "npx tsc"
   },
   "keywords": [],
   "author": "",

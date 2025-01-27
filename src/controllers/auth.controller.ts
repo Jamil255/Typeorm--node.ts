@@ -4,7 +4,9 @@ import { User } from '../models/user.entity.js'
 import bcrypt, { hash, compare } from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import { cookieOptions } from '../constants/cookie.js'
+import { Profile } from '../models/profile.entity.js'
 const userRepo = appDataSource.getRepository(User)
+const profileRepo = appDataSource.getRepository(Profile)
 
 const getAllRecordsController = async (
   req: Request,
@@ -68,9 +70,14 @@ const signUpController = async (
       return res.status(400).json({ message: 'User already exists' })
 
     const hashPass = await bcrypt.hash(password, 10)
+
+    const profile = new Profile()
+    profile.name = 'jamil afzal'
+    profile.photo = 'this is a photo'
     const newUser = new User()
     newUser.userName = userName
     newUser.password = hashPass
+    newUser.profile = profile
     await userRepo.save(newUser)
 
     if (!process.env.JWT_SECRET_KEY) {
@@ -89,6 +96,5 @@ const signUpController = async (
     return res.status(500).json({ message: error })
   }
 }
-
 
 export { getAllRecordsController, signUpController, loginController }
