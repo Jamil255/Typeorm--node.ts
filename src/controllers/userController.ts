@@ -2,9 +2,9 @@ import { Request, Response } from 'express'
 import appDataSource from '../constants/index.js'
 import { Profile } from '../models/profile.entity.js'
 import { User } from '../models/user.entity.js'
-
-const profileRepo = appDataSource.getRepository(Profile)
-const userRepo = appDataSource.getRepository(User)
+import { Product } from '../models/product.entity.js'
+import { Company } from '../models/company.entity.js'
+import { getRepos } from '../utills/index.js'
 
 const userProfile = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -12,7 +12,7 @@ const userProfile = async (req: Request, res: Response): Promise<Response> => {
 
     if (!name || !photo)
       return res.status(400).json({ message: 'name and photo are required' })
-
+    const profileRepo = getRepos(Profile)
     const profile = new Profile()
     profile.name = name
     profile.photo = photo
@@ -35,4 +35,27 @@ const getUserProfile = async (
     return res.status(500).json({ message: error })
   }
 }
-export { userProfile, getUserProfile }
+
+const oneToManyRel = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const products: Product[] = []
+    let product = new Product()
+    product.title = 'iphone'
+    product.price = 200000
+    product.description = 'this is smart iphone'
+
+    products.push(product)
+
+    let companys = new Company()
+
+    companys.name = 'meta'
+    companys.headquarter = 'usa'
+    companys.product = products
+
+    return res.status(200).json({ message: 'User profile' })
+  } catch (error) {
+    return res.status(500).json({ message: error })
+  }
+}
+
+export { userProfile, getUserProfile, oneToManyRel }

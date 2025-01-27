@@ -1,10 +1,10 @@
 import express, { Router } from 'express'
 import {
-  getAllRecordsController,
-  loginController,
-  signUpController,
+    getAllRecordsController,
+    loginController,
+    signUpController,
 } from '../controllers/auth.controller.js'
-import { getUserProfile, userProfile } from '../controllers/userController.js'
+import { oneToManyRel } from '../controllers/userController.js'
 const app: Router = express.Router()
 
 app.get('/users', getAllRecordsController)
@@ -13,6 +13,6 @@ app.post('/login', loginController)
 
 
 
-app.get('/profile',getUserProfile)
+app.get('/profile',oneToManyRel)
 
 export default app
