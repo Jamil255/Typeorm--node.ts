@@ -2,8 +2,8 @@ import { DataSource } from 'typeorm'
 import { User } from '../models/user.entity.js'
 import dotenv from 'dotenv'
 import { Profile } from '../models/profile.entity.js'
-import { Company } from '../models/company.entity.js'
-import { Product } from '../models/product.entity.js'
+import { Student } from '../models/manytomany/index.js'
+import { Course } from '../models/manytomany/course.js'
 dotenv.config()
 const isProd = process.env.NODE_ENV === 'producation'
 
@@ -14,7 +14,7 @@ const appDataSource = new DataSource({
   username: process.env.USER_NAME,
   password: process.env.PASSWORD,
   database: process.env.DATABASE,
-  entities: [User, Profile, Company, Product],
+  entities: [User, Profile, Student,Course],
   synchronize: !isProd,
   logging: !isProd,
 })
