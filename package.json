@@ -8,6 +8,7 @@
     "dev": "concurrently \"npx tsc -w\"  \"nodemon dist/app.js\"",
     "build:prod": "npx tsc"
   },
+  
   "keywords": [],
   "author": "",
   "license": "ISC",
